@@ -10,8 +10,12 @@ cachedir = conf.get("General", "cachedir", default="cache")
 
 
 def sp(command):
-    print("execute '%s' in %s" % (command, os.getcwd()))
+    #print("execute '%s' in %s" % (command, os.getcwd()))
     process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
     process.wait()
 
 
+def spns(command):
+    parts = command.split()
+    process = subprocess.Popen(parts, stdout=subprocess.PIPE)
+    process.wait()

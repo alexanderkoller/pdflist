@@ -19,10 +19,12 @@ SEL_TEXT_BG = (200,200,200)
 
 
 
-pygame.init()
 
 def create_screen():
     if conf.getboolean("General", "fullscreen"):
+        print("back to fullscreen")
+        pygame.display.quit()
+        pygame.display.init()
         return pygame.display.set_mode((0,0), pygame.FULLSCREEN)
         # modes = pygame.display.list_modes(COLOR_DEPTH)
         # WIDTH, HEIGHT = modes[0]
@@ -32,23 +34,9 @@ def create_screen():
         return pygame.display.set_mode((640, 480))
 
 
-screen = create_screen()
-
-WIDTH = screen.get_width()
-HEIGHT = screen.get_height()
-
-X_PROJECT = int(WIDTH*0.5)
-X_MODTIME = int(WIDTH*0.8)
-fontsize = WIDTH//40
 
 
 
-
-font = pygame.font.SysFont("Helvetica", fontsize)
-files = synchronize.synchronize()
-selected_index = 0
-
-files.sort(key=lambda x: x.date, reverse=True)
 
 
 # TODO - if needed, crop texts using extra argument of blit
@@ -68,10 +56,33 @@ def draw_link(pdflink, y, selected, surface):
     screen.blit(proj_text, (X_PROJECT, ypos))
     screen.blit(time_text, (X_MODTIME, ypos))
 
-
 def open(pdflink):
+    pygame.display.set_mode((5,5)) # switch out of fullscreen if necessary
     cmd = conf.get("General", "command")
-    sp(cmd % pdflink.abs_filename)
+    spns(cmd % pdflink.abs_filename)
+    return create_screen() # switch back to original size
+
+
+# load files
+files = synchronize.synchronize()
+files.sort(key=lambda x: x.date, reverse=True)
+
+selected_index = 0
+
+
+# set up pygame
+pygame.init()
+screen = create_screen()
+
+WIDTH = screen.get_width()
+HEIGHT = screen.get_height()
+
+X_PROJECT = int(WIDTH*0.5)
+X_MODTIME = int(WIDTH*0.8)
+fontsize = WIDTH//40
+
+
+font = pygame.font.SysFont("Helvetica", fontsize)
 
 
 # configure keys
@@ -101,7 +112,7 @@ while not done:
             elif event.key == up_key and selected_index > 0:
                 selected_index -= 1
             elif event.key == select_key:
-                open(files[selected_index])
+                screen = open(files[selected_index])
             elif event.key == quit_key:
                 done = True
 
