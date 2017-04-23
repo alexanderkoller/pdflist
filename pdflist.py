@@ -22,7 +22,6 @@ SEL_TEXT_BG = (200,200,200)
 
 def create_screen():
     if conf.getboolean("General", "fullscreen"):
-        print("back to fullscreen")
         pygame.display.quit()
         pygame.display.init()
         return pygame.display.set_mode((0,0), pygame.FULLSCREEN)
