@@ -1,3 +1,4 @@
+#! /usr/bin/python
 
 import pygame
 
@@ -90,11 +91,14 @@ for key in range(300):
     if pygame.key.name(key):
         keydict[pygame.key.name(key)] = key
 
+#print(keydict)
+
+
 up_key = keydict[conf.get("General", "up_key")]
 down_key = keydict[conf.get("General", "down_key")]
 quit_key = keydict[conf.get("General", "quit_key")]
 select_key = keydict[conf.get("General", "select_key")]
-
+shutdown_key = keydict[conf.get("General", "shutdown_key")]
 
 
 clock = pygame.time.Clock()
@@ -106,12 +110,15 @@ while not done:
         if event.type == pygame.QUIT:
             done = True
         elif event.type == pygame.KEYDOWN:
+        #print(event.key)
             if event.key == down_key and selected_index < len(files)-1:
                 selected_index += 1
             elif event.key == up_key and selected_index > 0:
                 selected_index -= 1
             elif event.key == select_key:
                 screen = open(files[selected_index])
+            elif event.key == shutdown_key:
+                sp("shutdown now")
             elif event.key == quit_key:
                 done = True
 
